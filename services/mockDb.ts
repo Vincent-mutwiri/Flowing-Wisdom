@@ -74,7 +74,13 @@ const STORAGE_KEYS = {
 // Helper to get data
 const getStorage = <T>(key: string, defaultValue: T): T => {
   const stored = localStorage.getItem(key);
-  return stored ? JSON.parse(stored) : defaultValue;
+  if (!stored) return defaultValue;
+  try {
+    return JSON.parse(stored);
+  } catch (e) {
+    console.warn(`Error parsing storage key "${key}":`, e);
+    return defaultValue;
+  }
 };
 
 // Helper to set data

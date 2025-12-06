@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHashLocation } from '../App';
 import { UserProfile } from '../types';
-import { LayoutDashboard, Calendar, Users, Trophy, LogOut, Shield, Sparkles, Activity, HeartPulse } from 'lucide-react';
+import { LayoutDashboard, Calendar, Users, Trophy, LogOut, Shield, Sparkles, Activity, HeartPulse, RefreshCw } from 'lucide-react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -58,10 +58,11 @@ const Layout: React.FC<LayoutProps> = ({ children, user, onLogout }) => {
           <div className="hidden md:block pt-4 border-t border-gray-100 mt-auto">
              <button
               onClick={onLogout}
-              className="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-500 hover:text-red-600 hover:bg-red-50 w-full transition-colors font-medium"
+              className="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-500 hover:text-primary-600 hover:bg-primary-50 w-full transition-colors font-medium"
+              title="Switch Role"
              >
-               <LogOut size={20} />
-               <span>Logout</span>
+               <RefreshCw size={20} />
+               <span>Switch Role</span>
              </button>
           </div>
         </div>
@@ -77,8 +78,8 @@ const Layout: React.FC<LayoutProps> = ({ children, user, onLogout }) => {
        {/* Mobile Header */}
        <div className="md:hidden fixed top-0 w-full bg-white/90 backdrop-blur-md border-b border-gray-200 p-4 z-40 flex justify-between items-center shadow-sm">
           <h1 className="text-lg font-bold text-primary-700">Flowing Wisdom</h1>
-          <button onClick={onLogout} className="text-gray-500 hover:text-red-500">
-            <LogOut size={20} />
+          <button onClick={onLogout} className="text-gray-500 hover:text-primary-500">
+            <RefreshCw size={20} />
           </button>
        </div>
        <div className="md:hidden h-16"></div> {/* Spacer */}
