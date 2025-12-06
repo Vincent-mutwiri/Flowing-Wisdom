@@ -1,0 +1,7 @@
+{
+  "name": "Flowing Wisdom",
+  "description": "A youth-friendly period tracking application combining health insights with gamification and community support.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
