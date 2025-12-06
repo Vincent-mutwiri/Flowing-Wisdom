@@ -10,6 +10,7 @@ import Admin from './components/Admin';
 import AiAssistant from './components/AiAssistant';
 import HealthTools from './components/HealthTools';
 import ImageStudio from './components/ImageStudio';
+import Onboarding from './components/Onboarding';
 import * as Db from './services/mockDb';
 import { UserProfile } from './types';
 import { AnimatePresence } from 'framer-motion';
@@ -18,10 +19,17 @@ export const useHashLocation = useHashRouting;
 
 const App: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(true);
   const { path } = useHashRouting();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Check if onboarding is done
+    const onboarded = localStorage.getItem('fw_onboarded');
+    if (onboarded) {
+        setShowOnboarding(false);
+    }
+
     // Auto-login logic
     const initUser = async () => {
         let storedUser = Db.getCurrentUser();
@@ -83,7 +91,16 @@ const App: React.FC = () => {
     }
   };
 
+  const handleOnboardingComplete = () => {
+      localStorage.setItem('fw_onboarded', 'true');
+      setShowOnboarding(false);
+  };
+
   if (loading) return <div className="h-screen flex items-center justify-center text-primary-500 font-bold">Loading Flowing Wisdom...</div>;
+  
+  if (showOnboarding) {
+      return <Onboarding onComplete={handleOnboardingComplete} />;
+  }
 
   if (!user) return <div className="p-4">Initializing...</div>;
 

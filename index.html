@@ -10,22 +10,15 @@
         theme: {
           extend: {
             colors: {
-              // Peach background tone
-              background: '#FFF0E6', 
-              // Primary Pinks/Reds
-              primary: {
-                50: '#fff0f1', 
-                100: '#ffe0e3', 
-                200: '#ffc5ca', 
-                300: '#ff9da7',
-                400: '#ff6477',
-                500: '#FF2D55', // Bright Pink
-                600: '#e11d48', 
-                700: '#be123c', 
-                800: '#9f1239', 
-                900: '#881337', 
-              },
-              // Deep Purples
+              background: '#FFF0E6',
+              primary: '#FF2D55', 
+              secondary: '#5A00C8',
+              teal: '#00E0C6', // Added for the Calendar selection color
+              // UI Specifics from previous config kept for compatibility
+              'card-purple': '#6C38CC',
+              'card-pink': '#FF6B8B',
+              'card-peach': '#FF8E53',
+              'action-orange': '#FF9F1C',
               accent: {
                 50: '#f5f3ff',
                 100: '#ede9fe',
@@ -35,17 +28,16 @@
                 500: '#8b5cf6', 
                 600: '#7c3aed',
                 700: '#6d28d9',
-                800: '#5A00C8', // Deep Purple
+                800: '#5A00C8',
                 900: '#4c1d95',
               },
-              // UI Specifics
-              'card-purple': '#6C38CC',
-              'card-pink': '#FF6B8B',
-              'card-peach': '#FF8E53',
-              'action-orange': '#FF9F1C',
             },
             fontFamily: {
-              sans: ['Inter', 'sans-serif'],
+              sans: ['Poppins', 'sans-serif'], // Changed from Inter
+            },
+            boxShadow: {
+              'glow-pink': '0 10px 40px -10px rgba(255, 45, 85, 0.5)',
+              'glow-purple': '0 10px 40px -10px rgba(90, 0, 200, 0.5)',
             },
             borderRadius: {
               '3xl': '1.5rem',
@@ -55,36 +47,31 @@
         },
       };
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
       body {
-        font-family: 'Inter', sans-serif;
-        background-color: #FFF0E6; /* Peach background */
-        color: #1f2937;
+        font-family: 'Poppins', sans-serif;
+        background-color: #FFF0E6;
+        color: #2D2D2D;
       }
-      /* Hide scrollbar for clean UI */
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
-      .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.1/",
-    "react": "https://aistudiocdn.com/react@^19.2.1",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.556.0",
-    "recharts": "https://aistudiocdn.com/recharts@^3.5.1",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
-    "framer-motion": "https://aistudiocdn.com/framer-motion@^11.0.28"
-  }
-}
-</script>
-</head>
+    <script type="importmap">
+    {
+      "imports": {
+        "react/": "https://aistudiocdn.com/react@^19.2.1/",
+        "react": "https://aistudiocdn.com/react@^19.2.1",
+        "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+        "react-dom": "https://aistudiocdn.com/react-dom@^19.2.1",
+        "lucide-react": "https://aistudiocdn.com/lucide-react@^0.556.0",
+        "recharts": "https://aistudiocdn.com/recharts@^3.5.1",
+        "framer-motion": "https://aistudiocdn.com/framer-motion@^11.0.28",
+        "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0"
+      }
+    }
+    </script>
+  </head>
   <body>
     <div id="root"></div>
   </body>

@@ -46,9 +46,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
              <ArrowRight className="text-gray-400" size={20} />
          </div>
          
-         <div className="grid grid-cols-3 gap-4">
+         <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
              {/* Breakfast - Pink/Orange Gradient */}
-             <div className="bg-gradient-to-b from-[#FFA7A7] to-[#FF6B8B] rounded-[2rem] p-4 text-white shadow-lg shadow-pink-200 relative overflow-hidden h-64 flex flex-col justify-end">
+             <div className="min-w-[150px] bg-gradient-to-b from-[#FFA7A7] to-[#FF6B8B] rounded-[2rem] p-4 text-white shadow-lg shadow-pink-200 relative overflow-hidden h-64 flex flex-col justify-end transition-transform hover:-translate-y-1">
                  <div className="absolute top-4 left-0 w-full flex justify-center">
                     <div className="bg-white/20 p-2 rounded-full backdrop-blur-sm">
                         <span className="text-4xl">🍳</span>
@@ -60,7 +60,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
              </div>
 
              {/* Lunch - Purple Gradient */}
-             <div className="bg-gradient-to-b from-[#A78BFA] to-[#7C3AED] rounded-[2rem] p-4 text-white shadow-lg shadow-purple-200 relative overflow-hidden h-64 flex flex-col justify-end">
+             <div className="min-w-[150px] bg-gradient-to-b from-[#A78BFA] to-[#7C3AED] rounded-[2rem] p-4 text-white shadow-lg shadow-purple-200 relative overflow-hidden h-64 flex flex-col justify-end transition-transform hover:-translate-y-1">
                  <div className="absolute top-4 left-0 w-full flex justify-center">
                     <div className="bg-white/20 p-2 rounded-full backdrop-blur-sm">
                         <span className="text-4xl">🥗</span>
@@ -72,7 +72,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
              </div>
 
              {/* Snack - Pink Gradient with Plus Button */}
-             <div className="bg-gradient-to-b from-[#FF8E53] to-[#FF2D55] rounded-[2rem] p-4 text-white shadow-lg shadow-red-200 relative overflow-hidden h-64 flex flex-col justify-end">
+             <div className="min-w-[150px] bg-gradient-to-b from-[#FF8E53] to-[#FF2D55] rounded-[2rem] p-4 text-white shadow-lg shadow-red-200 relative overflow-hidden h-64 flex flex-col justify-end transition-transform hover:-translate-y-1">
                  <div className="absolute top-4 left-0 w-full flex justify-center">
                     <div className="bg-white/20 p-2 rounded-full backdrop-blur-sm">
                         <span className="text-4xl">🍉</span>
