@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as Db from '../services/mockDb';
 import { UserProfile } from '../types';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface AuthProps {
   onLogin: (user: UserProfile) => void;
@@ -10,7 +10,7 @@ interface AuthProps {
 const Auth: React.FC<AuthProps> = ({ onLogin }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState(''); // Mocked
+  const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [age, setAge] = useState('');
   const [error, setError] = useState('');
@@ -20,133 +20,57 @@ const Auth: React.FC<AuthProps> = ({ onLogin }) => {
     e.preventDefault();
     setError('');
     setLoading(true);
-
     try {
       if (isLogin) {
         const user = await Db.loginUser(email);
         if (user) onLogin(user);
-        else setError('User not found. Try registering!');
+        else setError('User not found.');
       } else {
-        if (!username || !age) {
-            setError("Please fill all fields");
-            setLoading(false);
-            return;
-        }
+        if (!username || !age) { setError("Fill all fields"); setLoading(false); return; }
         const user = await Db.registerUser(email, username, parseInt(age));
         onLogin(user);
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong');
-    } finally {
-      setLoading(false);
-    }
+    } catch (err) { setError('Something went wrong'); } finally { setLoading(false); }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-primary-50 to-accent-50">
-      <div className="bg-white rounded-3xl shadow-2xl overflow-hidden w-full max-w-4xl flex flex-col md:flex-row">
-        
-        {/* Decorative Side */}
-        <div className="bg-primary-500 p-12 text-white flex flex-col justify-between md:w-5/12 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-             <div className="absolute top-[-20%] left-[-20%] w-64 h-64 rounded-full bg-white blur-3xl"></div>
-             <div className="absolute bottom-[-20%] right-[-20%] w-64 h-64 rounded-full bg-accent-400 blur-3xl"></div>
-          </div>
-          
-          <div className="relative z-10">
-            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-6 backdrop-blur-sm">
-                <Sparkles size={24} />
-            </div>
-            <h1 className="text-3xl font-bold mb-4">Flowing Wisdom</h1>
-            <p className="opacity-90 leading-relaxed">
-              Join a supportive community to track your health, understand your body, and earn rewards along the way.
-            </p>
-          </div>
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[#FFF0E6]">
+      <div className="bg-[#FFF0E6] w-full max-w-md flex flex-col items-center">
+         
+         <div className="mb-8 text-center">
+             <h1 className="text-4xl font-extrabold text-gray-900 mb-2 uppercase tracking-wide">Login to<br/>Dive In!</h1>
+             <p className="text-[#FF9F1C] font-bold">Tracking those days made easy</p>
+         </div>
 
-          <div className="relative z-10 hidden md:block">
-             <div className="flex -space-x-2 mb-4">
-                 {[1,2,3,4].map(i => (
-                     <div key={i} className="w-8 h-8 rounded-full bg-white/30 border-2 border-primary-500"></div>
-                 ))}
-             </div>
-             <p className="text-sm opacity-75">Join 1,000+ others today.</p>
-          </div>
-        </div>
+         <div className="mb-10 w-64 h-64 rounded-full bg-pink-100 flex items-center justify-center relative">
+             {/* Simple visual placeholder for the illustration */}
+             <div className="text-6xl">🌺</div>
+             <div className="absolute top-0 right-0 text-4xl">❤️</div>
+         </div>
 
-        {/* Form Side */}
-        <div className="p-8 md:p-12 flex-1 flex flex-col justify-center">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                {isLogin ? 'Welcome Back!' : 'Create an Account'}
-            </h2>
+         <form onSubmit={handleSubmit} className="w-full space-y-4 px-8">
+            {!isLogin && (
+                <>
+                <input type="text" value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" className="w-full p-4 rounded-xl border-none bg-white shadow-sm font-bold placeholder-gray-300" />
+                <input type="number" value={age} onChange={e => setAge(e.target.value)} placeholder="Age" className="w-full p-4 rounded-xl border-none bg-white shadow-sm font-bold placeholder-gray-300" />
+                </>
+            )}
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full p-4 rounded-xl border-none bg-white shadow-sm font-bold placeholder-gray-300" />
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" className="w-full p-4 rounded-xl border-none bg-white shadow-sm font-bold placeholder-gray-300" />
             
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input 
-                        type="email" required
-                        value={email} onChange={e => setEmail(e.target.value)}
-                        className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
-                        placeholder="you@example.com"
-                    />
-                </div>
+            {error && <p className="text-red-500 font-bold text-center">{error}</p>}
 
-                {!isLogin && (
-                    <>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                            <input 
-                                type="text" required
-                                value={username} onChange={e => setUsername(e.target.value)}
-                                className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
-                                placeholder="StarGazer99"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
-                            <input 
-                                type="number" required min="10" max="99"
-                                value={age} onChange={e => setAge(e.target.value)}
-                                className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
-                                placeholder="16"
-                            />
-                        </div>
-                    </>
-                )}
+            <button type="submit" className="w-full bg-[#FF9F1C] text-white py-4 rounded-full font-bold shadow-lg shadow-orange-200 mt-4 hover:scale-105 transition-transform">
+                {isLogin ? 'Login' : 'Sign-UP'}
+            </button>
+         </form>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input 
-                        type="password" required
-                        value={password} onChange={e => setPassword(e.target.value)}
-                        className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
-                        placeholder="••••••••"
-                    />
-                </div>
-
-                {error && <p className="text-red-500 text-sm">{error}</p>}
-
-                <button 
-                    type="submit" disabled={loading}
-                    className="w-full bg-gray-900 text-white py-3 rounded-xl font-bold hover:bg-gray-800 transition-all flex justify-center items-center gap-2 group"
-                >
-                    {loading ? 'Processing...' : (isLogin ? 'Log In' : 'Sign Up')}
-                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </button>
-            </form>
-
-            <div className="mt-6 text-center">
-                <p className="text-gray-500 text-sm">
-                    {isLogin ? "Don't have an account? " : "Already have an account? "}
-                    <button 
-                        onClick={() => setIsLogin(!isLogin)}
-                        className="text-primary-600 font-bold hover:underline"
-                    >
-                        {isLogin ? 'Sign up' : 'Log in'}
-                    </button>
-                </p>
-                {!isLogin && <p className="text-xs text-gray-400 mt-4">(Tip: Use 'admin@test.com' to create an admin)</p>}
-            </div>
-        </div>
+         <div className="mt-8 text-center">
+             <p className="font-bold text-gray-600 mb-4">{isLogin ? 'Not a user?' : 'Already a user?'}</p>
+             <button onClick={() => setIsLogin(!isLogin)} className="w-full bg-[#FF2D55] text-white py-4 rounded-full font-bold shadow-lg shadow-pink-200 hover:scale-105 transition-transform max-w-[200px]">
+                 {isLogin ? 'Sign-UP' : 'Login'}
+             </button>
+         </div>
       </div>
     </div>
   );

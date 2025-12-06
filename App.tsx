@@ -12,6 +12,7 @@ import HealthTools from './components/HealthTools';
 import ImageStudio from './components/ImageStudio';
 import * as Db from './services/mockDb';
 import { UserProfile } from './types';
+import { AnimatePresence } from 'framer-motion';
 
 export const useHashLocation = useHashRouting;
 
@@ -27,13 +28,12 @@ const App: React.FC = () => {
         
         if (!storedUser) {
             // Auto-login as default user 'u1' (Alice)
-            // accessing internal storage key from service would be cleaner but direct is fine for mock
             localStorage.setItem('fw_session', JSON.stringify('u1')); 
             
-            // Wait a tick for storage to settle or retry get
+            // Wait a tick for storage to settle
             storedUser = Db.getCurrentUser();
             
-            // Fallback if DB is completely empty (shouldn't happen due to mockDb init)
+            // Fallback if DB is completely empty
             if (!storedUser) {
                 const defaultUser: UserProfile = { 
                   id: 'u1', 
@@ -62,7 +62,6 @@ const App: React.FC = () => {
     
     // Toggle between user and admin for demo purposes
     if (user.role === 'user') {
-        // Create or switch to admin
         const adminProfile: UserProfile = {
             ...user,
             id: 'admin_demo',
@@ -70,18 +69,15 @@ const App: React.FC = () => {
             role: 'admin',
             email: 'admin@flow.com'
         };
-        // In a real app we'd save this to DB, here just local state for the session
         setUser(adminProfile);
         alert("Switched to Admin Mode");
     } else {
-        // Switch back to default user
         localStorage.setItem('fw_session', JSON.stringify('u1'));
         const defaultUser = Db.getCurrentUser();
         if (defaultUser) {
             setUser(defaultUser);
             alert("Switched to User Mode");
         } else {
-             // Reload to reset
              window.location.reload();
         }
     }
@@ -94,29 +90,31 @@ const App: React.FC = () => {
   const renderContent = () => {
     switch (path) {
       case '/':
-        return <Dashboard user={user} />;
+        return <Dashboard key="dashboard" user={user} />;
       case '/tracker':
-        return <Tracker user={user} />;
+        return <Tracker key="tracker" user={user} />;
       case '/community':
-        return <Community user={user} />;
+        return <Community key="community" user={user} />;
       case '/leaderboard':
-        return <Leaderboard user={user} />;
+        return <Leaderboard key="leaderboard" user={user} />;
       case '/ai-assistant':
-        return <AiAssistant user={user} />;
+        return <AiAssistant key="ai" user={user} />;
       case '/image-studio':
-        return <ImageStudio user={user} />;
+        return <ImageStudio key="studio" user={user} />;
       case '/health':
-        return <HealthTools user={user} />;
+        return <HealthTools key="health" user={user} />;
       case '/admin':
-        return <Admin user={user} />;
+        return <Admin key="admin" user={user} />;
       default:
-        return <Dashboard user={user} />;
+        return <Dashboard key="default" user={user} />;
     }
   };
 
   return (
     <Layout user={user} onLogout={handleRoleSwitch}>
-      {renderContent()}
+      <AnimatePresence mode="wait">
+        {renderContent()}
+      </AnimatePresence>
     </Layout>
   );
 };
