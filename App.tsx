@@ -9,7 +9,7 @@ import Leaderboard from './components/Leaderboard';
 import Admin from './components/Admin';
 import AiAssistant from './components/AiAssistant';
 import HealthTools from './components/HealthTools';
-import ImageStudio from './components/ImageStudio';
+import Settings from './components/Settings';
 import Onboarding from './components/Onboarding';
 import * as Db from './services/mockDb';
 import { UserProfile } from './types';
@@ -116,12 +116,12 @@ const App: React.FC = () => {
         return <Leaderboard key="leaderboard" user={user} />;
       case '/ai-assistant':
         return <AiAssistant key="ai" user={user} />;
-      case '/image-studio':
-        return <ImageStudio key="studio" user={user} />;
       case '/health':
         return <HealthTools key="health" user={user} />;
       case '/admin':
         return <Admin key="admin" user={user} />;
+      case '/settings':
+        return <Settings key="settings" user={user} onLogout={handleRoleSwitch} />;
       default:
         return <Dashboard key="default" user={user} />;
     }

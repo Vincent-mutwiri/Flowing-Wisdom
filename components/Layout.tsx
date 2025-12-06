@@ -1,8 +1,7 @@
 import React from 'react';
 import { useHashLocation } from '../App';
 import { UserProfile } from '../types';
-import { LayoutDashboard, Calendar, Users, Trophy, Shield, Sparkles, HeartPulse, RefreshCw, Wand2, Home } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Calendar, Users, Trophy, Shield, Sparkles, HeartPulse, RefreshCw, Home, Settings } from 'lucide-react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -50,13 +49,15 @@ const Layout: React.FC<LayoutProps> = ({ children, user, onLogout }) => {
               <NavItem to="/" icon={Home} label="Dashboard" />
               <NavItem to="/tracker" icon={Calendar} label="Cycle Tracker" />
               <NavItem to="/health" icon={HeartPulse} label="Health Tools" />
-              <NavItem to="/image-studio" icon={Wand2} label="Creative Studio" />
               
               <div className="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest mt-6 mb-2">Community</div>
               <NavItem to="/community" icon={Users} label="Social Space" />
               <NavItem to="/leaderboard" icon={Trophy} label="Leaderboard" />
               <NavItem to="/ai-assistant" icon={Sparkles} label="AI Assistant" />
               
+              <div className="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest mt-6 mb-2">General</div>
+              <NavItem to="/settings" icon={Settings} label="Settings" />
+
               {user.role === 'admin' && (
                 <>
                   <div className="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest mt-6 mb-2">Admin</div>
@@ -67,13 +68,6 @@ const Layout: React.FC<LayoutProps> = ({ children, user, onLogout }) => {
           </div>
 
           <div className="pt-6 border-t border-gray-100">
-             <button
-              onClick={onLogout}
-              className="flex items-center space-x-3 px-4 py-3 rounded-2xl text-gray-500 hover:bg-red-50 hover:text-red-500 w-full transition-colors font-medium"
-             >
-               <RefreshCw size={20} />
-               <span>Switch Role</span>
-             </button>
              <div className="mt-4 px-4 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-accent-200 flex items-center justify-center text-accent-800 font-bold">
                   {user.username.charAt(0)}
@@ -100,14 +94,13 @@ const Layout: React.FC<LayoutProps> = ({ children, user, onLogout }) => {
           <NavItem to="/tracker" icon={Calendar} label="Track" />
           <NavItem to="/ai-assistant" icon={Sparkles} label="AI" />
           <NavItem to="/health" icon={HeartPulse} label="Health" />
-          <button onClick={onLogout} className="p-3 text-gray-400"><RefreshCw size={20}/></button>
+          <NavItem to="/settings" icon={Settings} label="Settings" />
       </div>
     </div>
   );
 };
 
 export default Layout;
-
 export const useHashRouting = () => {
     const [loc, setLoc] = React.useState(window.location.hash.replace('#', '') || '/');
     
