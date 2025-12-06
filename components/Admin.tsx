@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { UserProfile, Post, Course } from '../types';
 import * as Db from '../services/mockDb';
-import { Check, X, Trash2, BookOpen, Plus, Save } from 'lucide-react';
+import { Check, X, Trash2, BookOpen, Plus, Save, Sparkles, Loader2 } from 'lucide-react';
+import { GoogleGenAI, Type } from "@google/genai";
 
 interface AdminProps {
   user: UserProfile;
@@ -15,6 +16,8 @@ const Admin: React.FC<AdminProps> = ({ user }) => {
 
   // Course Form
   const [newCourse, setNewCourse] = useState({ title: '', description: '', content: '' });
+  const [aiTopic, setAiTopic] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const refreshData = () => {
     setUsers(Db.getAllUsers());
@@ -43,6 +46,47 @@ const Admin: React.FC<AdminProps> = ({ user }) => {
     });
     setNewCourse({ title: '', description: '', content: '' });
     refreshData();
+  };
+
+  // --- AI Course Generation ---
+  const handleGenerateCourse = async () => {
+    if (!aiTopic.trim()) return;
+    setIsGenerating(true);
+
+    try {
+        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: `Create a short educational course about: ${aiTopic}. Keep language simple, youth-friendly, and empowering.`,
+            config: {
+                responseMimeType: 'application/json',
+                responseSchema: {
+                    type: Type.OBJECT,
+                    properties: {
+                        title: { type: Type.STRING },
+                        description: { type: Type.STRING },
+                        content: { type: Type.STRING, description: "HTML formatted content for the course body" },
+                    },
+                    required: ["title", "description", "content"]
+                }
+            }
+        });
+
+        const generated = JSON.parse(response.text || '{}');
+        
+        if (generated.title) {
+            setNewCourse({
+                title: generated.title,
+                description: generated.description || '',
+                content: generated.content || ''
+            });
+        }
+    } catch (error) {
+        console.error("AI Generation Error:", error);
+        alert("Failed to generate course content.");
+    } finally {
+        setIsGenerating(false);
+    }
   };
 
   if (user.role !== 'admin') {
@@ -161,42 +205,71 @@ const Admin: React.FC<AdminProps> = ({ user }) => {
         {/* Course Management */}
         {activeTab === 'courses' && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 h-fit">
-                    <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <Plus size={18} /> Add New Course
-                    </h3>
-                    <form onSubmit={handleCreateCourse} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Title</label>
+                <div className="lg:col-span-1 space-y-6">
+                    {/* AI Generator Box */}
+                    <div className="bg-gradient-to-br from-primary-50 to-white p-6 rounded-2xl shadow-sm border border-primary-100">
+                        <h3 className="font-bold text-primary-800 mb-2 flex items-center gap-2">
+                            <Sparkles size={18} />
+                            AI Course Creator
+                        </h3>
+                        <p className="text-xs text-gray-600 mb-4">
+                            Enter a topic and let AI draft the course content for you.
+                        </p>
+                        <div className="flex gap-2">
                             <input 
-                                className="w-full p-2 border border-gray-200 rounded-lg text-sm"
-                                value={newCourse.title}
-                                onChange={e => setNewCourse({...newCourse, title: e.target.value})}
-                                placeholder="e.g., Menstrual Health 101"
+                                className="flex-1 p-2 border border-gray-200 rounded-lg text-sm bg-white"
+                                value={aiTopic}
+                                onChange={(e) => setAiTopic(e.target.value)}
+                                placeholder="Topic (e.g. Iron deficiency)"
                             />
+                            <button 
+                                onClick={handleGenerateCourse}
+                                disabled={isGenerating || !aiTopic}
+                                className="bg-primary-600 text-white p-2 rounded-lg disabled:opacity-50"
+                            >
+                                {isGenerating ? <Loader2 size={18} className="animate-spin" /> : <Sparkles size={18} />}
+                            </button>
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Description</label>
-                            <input 
-                                className="w-full p-2 border border-gray-200 rounded-lg text-sm"
-                                value={newCourse.description}
-                                onChange={e => setNewCourse({...newCourse, description: e.target.value})}
-                                placeholder="Short summary"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Content (HTML)</label>
-                            <textarea 
-                                className="w-full p-2 border border-gray-200 rounded-lg text-sm h-32"
-                                value={newCourse.content}
-                                onChange={e => setNewCourse({...newCourse, content: e.target.value})}
-                                placeholder="<p>Course content...</p>"
-                            />
-                        </div>
-                        <button className="w-full bg-primary-600 text-white py-2 rounded-lg font-bold hover:bg-primary-700 transition-colors">
-                            Create Course
-                        </button>
-                    </form>
+                    </div>
+
+                    {/* Manual Form */}
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <Plus size={18} /> Add New Course
+                        </h3>
+                        <form onSubmit={handleCreateCourse} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Title</label>
+                                <input 
+                                    className="w-full p-2 border border-gray-200 rounded-lg text-sm"
+                                    value={newCourse.title}
+                                    onChange={e => setNewCourse({...newCourse, title: e.target.value})}
+                                    placeholder="e.g., Menstrual Health 101"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Description</label>
+                                <input 
+                                    className="w-full p-2 border border-gray-200 rounded-lg text-sm"
+                                    value={newCourse.description}
+                                    onChange={e => setNewCourse({...newCourse, description: e.target.value})}
+                                    placeholder="Short summary"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Content (HTML)</label>
+                                <textarea 
+                                    className="w-full p-2 border border-gray-200 rounded-lg text-sm h-32"
+                                    value={newCourse.content}
+                                    onChange={e => setNewCourse({...newCourse, content: e.target.value})}
+                                    placeholder="<p>Course content...</p>"
+                                />
+                            </div>
+                            <button className="w-full bg-primary-600 text-white py-2 rounded-lg font-bold hover:bg-primary-700 transition-colors">
+                                Create Course
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
                 <div className="lg:col-span-2 space-y-4">

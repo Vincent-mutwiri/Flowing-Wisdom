@@ -9,6 +9,7 @@ import Leaderboard from './components/Leaderboard';
 import Admin from './components/Admin';
 import AiAssistant from './components/AiAssistant';
 import HealthTools from './components/HealthTools';
+import ImageStudio from './components/ImageStudio';
 import * as Db from './services/mockDb';
 import { UserProfile } from './types';
 
@@ -102,6 +103,8 @@ const App: React.FC = () => {
         return <Leaderboard user={user} />;
       case '/ai-assistant':
         return <AiAssistant user={user} />;
+      case '/image-studio':
+        return <ImageStudio user={user} />;
       case '/health':
         return <HealthTools user={user} />;
       case '/admin':

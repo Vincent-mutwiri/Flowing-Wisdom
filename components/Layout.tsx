@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHashLocation } from '../App';
 import { UserProfile } from '../types';
-import { LayoutDashboard, Calendar, Users, Trophy, LogOut, Shield, Sparkles, Activity, HeartPulse, RefreshCw } from 'lucide-react';
+import { LayoutDashboard, Calendar, Users, Trophy, LogOut, Shield, Sparkles, Activity, HeartPulse, RefreshCw, Wand2 } from 'lucide-react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -48,6 +48,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, onLogout }) => {
             <NavItem to="/health" icon={HeartPulse} label="Health Tools" />
             <NavItem to="/community" icon={Users} label="Social Space" />
             <NavItem to="/ai-assistant" icon={Sparkles} label="AI Assistant" />
+            <NavItem to="/image-studio" icon={Wand2} label="Creative Studio" />
             <NavItem to="/leaderboard" icon={Trophy} label="Leaderboard" />
             
             {user.role === 'admin' && (
